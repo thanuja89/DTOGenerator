@@ -78,7 +78,7 @@ namespace Core
             var closingTags = new string('>', nonCollectionCount - 1);
             resultBuilder.Append(closingTags);
 
-            resultBuilder.Insert(resultBuilder.Length, "", collectionCount);
+            resultBuilder.Insert(resultBuilder.Length, "[]", collectionCount);
 
             return resultBuilder.ToString();
         }

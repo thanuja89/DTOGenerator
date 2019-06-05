@@ -67,6 +67,23 @@ namespace DTGen.Tests
             Assert.Equal(expectedType, type);
         }
 
+        [Theory]
+        [InlineData("List<int>", "number[]")]
+        [InlineData("IEnumerable<List<int>>", "number[][]")]
+        [InlineData("IEnumerable<Task<int>>", "Task<number>[]")]
+        [InlineData("IEnumerable<Task<List<int>>>", "Task<number[]>[]")]
+        public void GetPropertyType_WhenGenericCollectionCSType_ReturnsCorrectGenericArrayTSType(string sourceType, string expectedType)
+        {
+            // Arrange
+            SetUp();
+
+            // Act
+            var type = _sut.GetPropertyType(sourceType);
+
+            // Assert
+            Assert.Equal(expectedType, type);
+        }
+
         private void SetUp()
         {
             _sut = new TSLanguageService(new GenOptions()
