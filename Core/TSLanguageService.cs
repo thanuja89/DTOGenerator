@@ -5,8 +5,13 @@ using System.Text.RegularExpressions;
 
 namespace Core
 {
-    public class TypeScriptDataTypeMapper : IDataTypeMapper
+    public class TSLanguageService : ILanguageService
     {
+        public TSLanguageService(GenOptions options)
+        {
+            _options = options;
+        }
+
         private readonly Dictionary<string, string> _mappings = new Dictionary<string, string>()
         {
             { "int", "number" },
@@ -14,7 +19,16 @@ namespace Core
             { "DateTime", "Date" },
             { "bool", "boolean" }
         };
-        public string Map(string sourceType)
+        private readonly GenOptions _options;
+
+        public string GetPropertyDeclaration(string name, string type)
+        {
+            string typeStr = GetPropertyType(type);
+
+            return $"public {name}: {typeStr};";
+        }
+
+        public string GetPropertyType(string sourceType)
         {
             var innerTypes = Regex.Split(sourceType, "<|>");
 
@@ -26,19 +40,17 @@ namespace Core
             return MapGenericType(innerTypes);
         }
 
-        private string MapSimpleType(string sourceType)
+        public string MapSimpleType(string sourceType)
         {
             _mappings.TryGetValue(sourceType, out string val);
 
             return val ?? sourceType;
         }
 
-        public string MapGenericType(string[] types)
+        private string MapGenericType(string[] types)
         {
             bool isNonCollectionTypeFound = false;
-
-            int collectionCount = 0;
-            int nonCollectionCount = 0;
+            int collectionCount = 0, nonCollectionCount = 0;
 
             StringBuilder resultBuilder = new StringBuilder();
 
@@ -54,7 +66,6 @@ namespace Core
                     nonCollectionCount++;
 
                     var simpleType = MapSimpleType(type);
-
                     resultBuilder.Append($"{simpleType}<"); // must remove extra one
                 }
             }
@@ -62,7 +73,6 @@ namespace Core
             resultBuilder.Remove(resultBuilder.Length - 1, 1);
 
             var closingTags = new string('>', nonCollectionCount);
-
             resultBuilder.Append(closingTags);
 
             resultBuilder.Insert(resultBuilder.Length, "", collectionCount);
