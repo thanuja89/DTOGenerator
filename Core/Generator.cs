@@ -35,7 +35,7 @@ namespace Core
                 .Single();
 
             if (@class == null)
-                throw new ArgumentException("No class found", nameof(source));
+                throw new ArgumentException("No root class found", nameof(source));
 
             var walker = new PropertyCollectorWalker();
 

@@ -21,6 +21,13 @@ namespace Core
         };
         private readonly GenOptions _options;
 
+        public string GetSimpleType(string sourceType)
+        {
+            _mappings.TryGetValue(sourceType, out string val);
+
+            return val ?? sourceType;
+        }
+
         public string GetPropertyDeclaration(string name, string type)
         {
             string typeStr = GetPropertyType(type);
@@ -34,20 +41,13 @@ namespace Core
 
             if (innerTypes.Length <= 1)
             {
-                return MapSimpleType(sourceType);
+                return GetSimpleType(sourceType);
             }
 
-            return MapGenericType(innerTypes);
+            return MakeGenericType(innerTypes);
         }
 
-        public string MapSimpleType(string sourceType)
-        {
-            _mappings.TryGetValue(sourceType, out string val);
-
-            return val ?? sourceType;
-        }
-
-        private string MapGenericType(string[] types)
+        private string MakeGenericType(string[] types)
         {
             bool isNonCollectionTypeFound = false;
             int collectionCount = 0, nonCollectionCount = 0;
@@ -56,6 +56,9 @@ namespace Core
 
             foreach (var type in types)
             {
+                if (string.IsNullOrWhiteSpace(type))
+                    continue;
+
                 var isCollection = Regex.IsMatch(type, @"(IEnumerable)|(I?Collection)|(I?Dictionary)|(I?List)");
 
                 if (!isNonCollectionTypeFound && isCollection)
@@ -65,14 +68,14 @@ namespace Core
                     isNonCollectionTypeFound = true;
                     nonCollectionCount++;
 
-                    var simpleType = MapSimpleType(type);
+                    var simpleType = GetSimpleType(type);
                     resultBuilder.Append($"{simpleType}<"); // must remove extra one
                 }
             }
 
             resultBuilder.Remove(resultBuilder.Length - 1, 1);
 
-            var closingTags = new string('>', nonCollectionCount);
+            var closingTags = new string('>', nonCollectionCount - 1);
             resultBuilder.Append(closingTags);
 
             resultBuilder.Insert(resultBuilder.Length, "", collectionCount);
