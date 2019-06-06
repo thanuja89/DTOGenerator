@@ -23,6 +23,27 @@ namespace DTGen.Tests
         }
 
         [Theory]
+        [InlineData("IEnumerable", "any[]")]
+        [InlineData("ICollection", "any[]")]
+        [InlineData("Collection", "any[]")]
+        [InlineData("IList", "any[]")]
+        [InlineData("List", "any[]")]
+        [InlineData("Stack", "any[]")]
+        [InlineData("Queue", "any[]")]
+        [InlineData("ArrayList", "any[]")]
+        public void GetSimpleType_WhenCSTypeIsCollection_ReturnsCorrectTSType(string sourceType, string expectedType)
+        {
+            // Arrange
+            SetUp();
+
+            // Act
+            var type = _sut.GetSimpleType(sourceType);
+
+            // Assert
+            Assert.Equal(expectedType, type);
+        }
+
+        [Theory]
         [InlineData("aaa", "aaa")]
         [InlineData("bbb", "bbb")]
         public void GetSimpleType_WhenCSTypeNotMatched_ReturnsSourceType(string sourceType, string expectedType)
@@ -72,6 +93,7 @@ namespace DTGen.Tests
         [InlineData("IEnumerable<List<int>>", "number[][]")]
         [InlineData("IEnumerable<Task<int>>", "Task<number>[]")]
         [InlineData("IEnumerable<Task<List<int>>>", "Task<number[]>[]")]
+        [InlineData("IEnumerable<Task<List<ArrayList>>>", "Task<any[][]>[]")]
         public void GetPropertyType_WhenGenericCollectionCSType_ReturnsCorrectGenericArrayTSType(string sourceType, string expectedType)
         {
             // Arrange

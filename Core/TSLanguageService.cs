@@ -58,7 +58,7 @@ namespace Core
 
         private bool IsCollection(string type)
         {
-            return Regex.IsMatch(type, @"^(IEnumerable)|(I?Collection)|(I?List)|(Stack)|(Queue)$");
+            return Regex.IsMatch(type, @"^(IEnumerable)|(I?Collection)|(I?List)|(Stack)|(Queue)|(ArrayList)$");
         }
     }
 }
