@@ -30,22 +30,34 @@ namespace Core
 
             var root = await tree.GetRootAsync();
 
-            var @class = root.ChildNodes()
+            var classes = root.ChildNodes()
                 .OfType<ClassDeclarationSyntax>()
-                .Single();
+                .ToList();
 
-            if (@class == null)
+            if (classes.Count == 0)
                 throw new ArgumentException("No root class found", nameof(source));
 
-            var walker = new PropertyCollector();
+            var sb = new StringBuilder();
 
-            walker.Visit(@class);
+            var i = 0;
 
-            var result = ProcessProperties(walker.Properties);
+            foreach (var @class in classes)
+            {
+                var walker = new PropertyCollector();
 
-            var classStr = _languageService.GetClassDeclaration(@class.Identifier.Text, result);
+                walker.Visit(@class);
 
-            return classStr;
+                var result = ProcessProperties(walker.Properties);
+
+                var classStr = _languageService.GetClassDeclaration(@class.Identifier.Text, result);
+
+                sb.Append(classStr);
+
+                if(++i != classes.Count)
+                    sb.AppendLine(Environment.NewLine);
+            }
+
+            return sb.ToString();
         }
 
         private string ProcessProperties(IEnumerable<(string name, string type)> propertyDefs)

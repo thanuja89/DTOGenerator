@@ -17,8 +17,8 @@ namespace Core
 
         public string GetClassDeclaration(string name, string contents)
         {
-            return $@"
-export class {name} {{{contents}
+            return 
+$@"export class {name} {{{contents}
 }}";
         }
 
