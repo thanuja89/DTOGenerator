@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Core.Walkers
 {
-    public class PropertyCollectorWalker : CSharpSyntaxWalker
+    public class PropertyCollector : CSharpSyntaxWalker
     {
         private readonly List<(string name, string type)> _propertyDefs = new List<(string name, string type)>();
 

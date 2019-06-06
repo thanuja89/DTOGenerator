@@ -37,7 +37,7 @@ namespace Core
             if (@class == null)
                 throw new ArgumentException("No root class found", nameof(source));
 
-            var walker = new PropertyCollectorWalker();
+            var walker = new PropertyCollector();
 
             walker.Visit(@class);
 

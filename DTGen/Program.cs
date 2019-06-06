@@ -22,6 +22,8 @@ namespace DTGen
             });
 
             Console.WriteLine(await gen.GenerateAsync(source));
+
+            Console.ReadKey();
         }
     }
 }
