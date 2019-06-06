@@ -108,7 +108,11 @@ namespace DTGen.Tests
 
         private void SetUp()
         {
-            _sut = new TSLanguageService();
+            _sut = new TSLanguageService(new GenOptions()
+            {
+                IsCamelCaseEnabled = true,
+                Language = Language.TypeScript
+            });
         }
     }
 }

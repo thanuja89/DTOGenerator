@@ -7,6 +7,11 @@ namespace Core
 {
     public class TSLanguageService : ILanguageService
     {
+        public TSLanguageService(GenOptions options)
+        {
+            _options = options;
+        }
+
         private readonly Dictionary<string, string> _mappings = new Dictionary<string, string>()
         {
             { "int", "number" },
@@ -14,11 +19,14 @@ namespace Core
             { "DateTime", "Date" },
             { "bool", "boolean" }
         };
+        private readonly GenOptions _options;
 
-        public string GetClassDeclaration(string name, string contents)
+        public string GetContainerDeclaration(string name, string contents)
         {
+            var compName = _options.IsMapToInterfaceEnabled ? "interface" : "class";
+
             return 
-$@"export class {name} {{{contents}
+$@"export {compName} {name} {{{contents}
 }}";
         }
 

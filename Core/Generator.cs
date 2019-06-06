@@ -49,7 +49,7 @@ namespace Core
 
                 var result = ProcessProperties(walker.Properties);
 
-                var classStr = _languageService.GetClassDeclaration(@class.Identifier.Text, result);
+                var classStr = _languageService.GetContainerDeclaration(@class.Identifier.Text, result);
 
                 sb.Append(classStr);
 
