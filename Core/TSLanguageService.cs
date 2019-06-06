@@ -1,17 +1,11 @@
 ﻿using Core.Abstractions;
 using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Core
 {
     public class TSLanguageService : ILanguageService
     {
-        public TSLanguageService(GenOptions options)
-        {
-            _options = options;
-        }
-
         private readonly Dictionary<string, string> _mappings = new Dictionary<string, string>()
         {
             { "int", "number" },
@@ -19,10 +13,12 @@ namespace Core
             { "DateTime", "Date" },
             { "bool", "boolean" }
         };
-        private readonly GenOptions _options;
 
         public string GetSimpleType(string sourceType)
         {
+            if (IsCollection(sourceType))
+                return "any[]";
+
             _mappings.TryGetValue(sourceType, out string val);
 
             return val ?? sourceType;
@@ -37,50 +33,32 @@ namespace Core
 
         public string GetPropertyType(string sourceType)
         {
-            var innerTypes = Regex.Split(sourceType, "<|>");
-
-            if (innerTypes.Length <= 1)
-            {
-                return GetSimpleType(sourceType);
-            }
-
-            return MakeGenericType(innerTypes);
+            return GetTSType(sourceType);
         }
 
-        private string MakeGenericType(string[] types)
+        private string GetTSType(string sourceType)
         {
-            bool isNonCollectionTypeFound = false;
-            int collectionCount = 0, nonCollectionCount = 0;
+            var match = Regex.Match(sourceType, "(?<type>.+?)<(?<innerType>.+)>");
 
-            StringBuilder resultBuilder = new StringBuilder();
+            if (!match.Success)
+                return GetSimpleType(sourceType);
 
-            foreach (var type in types)
+            string type = match.Groups["type"].Value;
+            string innerType = match.Groups["innerType"].Value;
+
+            string innerTSType = GetTSType(innerType);
+
+            if (IsCollection(type))
             {
-                if (string.IsNullOrWhiteSpace(type))
-                    continue;
-
-                var isCollection = Regex.IsMatch(type, @"(IEnumerable)|(I?Collection)|(I?Dictionary)|(I?List)");
-
-                if (!isNonCollectionTypeFound && isCollection)
-                    collectionCount++;
-                else
-                {
-                    isNonCollectionTypeFound = true;
-                    nonCollectionCount++;
-
-                    var simpleType = GetSimpleType(type);
-                    resultBuilder.Append($"{simpleType}<"); // must remove extra one
-                }
+                return $"{innerTSType}[]";
             }
 
-            resultBuilder.Remove(resultBuilder.Length - 1, 1);
+            return $"{type}<{innerTSType}>";
+        }
 
-            var closingTags = new string('>', nonCollectionCount - 1);
-            resultBuilder.Append(closingTags);
-
-            resultBuilder.Insert(resultBuilder.Length, "[]", collectionCount);
-
-            return resultBuilder.ToString();
+        private bool IsCollection(string type)
+        {
+            return Regex.IsMatch(type, @"^(IEnumerable)|(I?Collection)|(I?List)|(Stack)|(Queue)$");
         }
     }
 }

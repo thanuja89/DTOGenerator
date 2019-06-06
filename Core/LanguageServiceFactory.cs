@@ -12,7 +12,7 @@ namespace Core
             switch (options.Language)
             {
                 case Language.TypeScript:
-                    provider = new TSLanguageService(options);
+                    provider = new TSLanguageService();
                     break;
 
                 default:
