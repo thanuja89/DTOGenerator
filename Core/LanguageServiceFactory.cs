@@ -16,7 +16,7 @@ namespace Core
                     break;
 
                 default:
-                    throw new InvalidOperationException();
+                    throw new ArgumentException("Invalid language", nameof(options.Language));
             }
 
             return provider;

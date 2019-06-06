@@ -2,7 +2,9 @@
 {
     public interface ILanguageService
     {
-        string GetPropertyType(string sourceType);
+        string GetClassDeclaration(string name, string contents);
         string GetPropertyDeclaration(string name, string type);
+        string GetPropertyType(string sourceType);
+        string GetSimpleType(string sourceType);
     }
 }

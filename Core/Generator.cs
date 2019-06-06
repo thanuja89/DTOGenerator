@@ -41,19 +41,17 @@ namespace Core
 
             walker.Visit(@class);
 
-            var sb = new StringBuilder();
+            var result = ProcessProperties(walker.Properties);
 
-            sb.AppendLine("export class Model {");
+            var classStr = _languageService.GetClassDeclaration(@class.Identifier.Text, result);
 
-            ProcessProperties(sb, walker.Properties);
-
-            sb.AppendLine("}");
-
-            return sb.ToString();
+            return classStr;
         }
 
-        private void ProcessProperties(StringBuilder sb, IEnumerable<(string name, string type)> propertyDefs)
+        private string ProcessProperties(IEnumerable<(string name, string type)> propertyDefs)
         {
+            var sb = new StringBuilder();
+
             foreach (var (name, type) in propertyDefs)
             {
                 var nameStr = _options.IsCamelCaseEnabled ? name.ToCamelCase() : name;
@@ -62,6 +60,8 @@ namespace Core
 
                 sb.Append(propStr);
             }
+
+            return sb.ToString();
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Core.Walkers
         public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
         {
             if (node.Modifiers.Any(m => m.Text == "public"))
-                _propertyDefs.Add((node.Identifier.ToString(), node.Type.ToString()));
+                _propertyDefs.Add((node.Identifier.Text, node.Type.ToString()));
         }
     }
 }

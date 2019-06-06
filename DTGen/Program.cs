@@ -1,12 +1,27 @@
-﻿using System;
+﻿using Core;
+using System;
+using System.Threading.Tasks;
 
 namespace DTGen
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var source = @"
+    public class Model
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }";
+
+            var gen = new Generator(new GenOptions()
+            {
+                IsCamelCaseEnabled = true,
+                Language = Language.TypeScript
+            });
+
+            Console.WriteLine(await gen.GenerateAsync(source));
         }
     }
 }

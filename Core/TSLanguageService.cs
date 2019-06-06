@@ -1,4 +1,5 @@
 ﻿using Core.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -14,6 +15,13 @@ namespace Core
             { "bool", "boolean" }
         };
 
+        public string GetClassDeclaration(string name, string contents)
+        {
+            return $@"
+export class {name} {{{contents}
+}}";
+        }
+
         public string GetSimpleType(string sourceType)
         {
             if (IsCollection(sourceType))
@@ -28,7 +36,7 @@ namespace Core
         {
             string typeStr = GetPropertyType(type);
 
-            return $"public {name}: {typeStr};";
+            return $"{Environment.NewLine}\tpublic {name}: {typeStr};";
         }
 
         public string GetPropertyType(string sourceType)
