@@ -11,7 +11,8 @@ namespace DTGen
             var source = @"
     public class Model
     {
-        public int Id { get; set; }
+        public List<int> Id { get; set; }
+        public Dictionary<int, string> Roles { get; set; }
         public string Name { get; set; }
         public string Field1, field2;
     }";

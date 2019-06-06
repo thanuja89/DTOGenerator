@@ -46,7 +46,7 @@ export class {name} {{{contents}
 
         private string GetTSType(string sourceType)
         {
-            var match = Regex.Match(sourceType, "(?<type>.+?)<(?<innerType>.+)>");
+            var match = Regex.Match(sourceType, "(?<type>[a-zA-Z_0-9()<>]+?)<(?<innerType>[a-zA-Z_0-9()<>]+)>");
 
             if (!match.Success)
                 return GetSimpleType(sourceType);
