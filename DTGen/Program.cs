@@ -13,6 +13,7 @@ namespace DTGen
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Field1, field2;
     }";
 
             var gen = new Generator(new GenOptions()

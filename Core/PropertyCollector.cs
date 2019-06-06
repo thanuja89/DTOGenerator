@@ -17,5 +17,19 @@ namespace Core.Walkers
             if (node.Modifiers.Any(m => m.Text == "public"))
                 _propertyDefs.Add((node.Identifier.Text, node.Type.ToString()));
         }
+
+        public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
+        {
+            if (node.Modifiers.Any(m => m.Text == "public"))
+            {
+                VariableDeclarationSyntax variableDeclaration = node.Declaration;
+
+                foreach (var variable in variableDeclaration.Variables)
+                {
+                    _propertyDefs.Add((variable.Identifier.Text, variableDeclaration.Type.ToString()));
+                }
+            }
+                
+        }
     }
 }
