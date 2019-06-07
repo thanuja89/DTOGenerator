@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DTGen", "DTGen\DTGen.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{69EA5439-92A8-42C2-B3BD-95429BF448B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTGen.Tests", "DTGen.Tests\DTGen.Tests.csproj", "{BCD9A57E-3B8C-4164-A5DE-4721EEDD5731}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DTGen.Tests", "DTGen.Tests\DTGen.Tests.csproj", "{BCD9A57E-3B8C-4164-A5DE-4721EEDD5731}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTGenFunctionApp", "DTGenFunctionApp\DTGenFunctionApp.csproj", "{D1ADFC42-5E67-4C48-848A-67E518BDA6FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{BCD9A57E-3B8C-4164-A5DE-4721EEDD5731}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCD9A57E-3B8C-4164-A5DE-4721EEDD5731}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BCD9A57E-3B8C-4164-A5DE-4721EEDD5731}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1ADFC42-5E67-4C48-848A-67E518BDA6FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1ADFC42-5E67-4C48-848A-67E518BDA6FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1ADFC42-5E67-4C48-848A-67E518BDA6FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1ADFC42-5E67-4C48-848A-67E518BDA6FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
