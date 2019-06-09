@@ -37,7 +37,7 @@ namespace DTGenFunctionApp
 
                 var result = await generator.GenerateAsync(genRequest.Source);
 
-                return new OkObjectResult(result);
+                return new OkObjectResult(new { Result = result });
             }
             catch (Exception ex)
             {
