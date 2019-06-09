@@ -14,13 +14,13 @@ namespace Core.Walkers
 
         public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
         {
-            if (node.Modifiers.Any(m => m.Text == "public"))
+            if (node.Modifiers.Any(m => m.Kind() == SyntaxKind.PublicKeyword))
                 _propertyDefs.Add((node.Identifier.Text, node.Type.ToString()));
         }
 
         public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
         {
-            if (node.Modifiers.Any(m => m.Text == "public"))
+            if (node.Modifiers.Any(m => m.Kind() == SyntaxKind.PublicKeyword))
             {
                 VariableDeclarationSyntax variableDeclaration = node.Declaration;
 
