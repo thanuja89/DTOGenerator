@@ -1,4 +1,6 @@
 ﻿using Core;
+using Core.Abstractions;
+using Moq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Xunit;
@@ -7,6 +9,9 @@ namespace DTGen.Tests
 {
     public class GeneratorTests
     {
+        private string _propText;
+        private string _containerText;
+        private Mock<ILanguageService> _mockLanguageService;
         private Generator _sut;
 
         [Fact]
@@ -15,7 +20,7 @@ namespace DTGen.Tests
             // Arrange
             SetUp();
 
-            var source = 
+            var source =
 @"public class Model
 {
     public List<int> Id { get; set; }
@@ -27,9 +32,9 @@ namespace DTGen.Tests
             // Assert
 
             string expected = IgnoreExtraWhiteSpace(
-@"export class Model {
-    public id: number[];
-}");
+$@"export class Model {{
+    { _propText }
+}}");
 
             string actual = IgnoreExtraWhiteSpace(result);
 
@@ -60,9 +65,9 @@ namespace DTGen.Tests
             // Assert
 
             string expected = IgnoreExtraWhiteSpace(
-@"export interface Model {
-    public id: number[];
-}");
+$@"export interface Model {{
+    { _propText }
+}}");
 
             string actual = IgnoreExtraWhiteSpace(result);
 
@@ -76,8 +81,13 @@ namespace DTGen.Tests
             // Arrange
             SetUp();
 
-            var source =                 
+            var source =
 @"public class Model
+{
+    public List<int> Id { get; set; }
+}
+
+public class Model
 {
     public List<int> Id { get; set; }
 }";
@@ -88,9 +98,13 @@ namespace DTGen.Tests
             // Assert
 
             string expected = IgnoreExtraWhiteSpace(
-@"export class Model {
-    public id: number[];
-}");
+$@"export class Model {{
+    { _propText }
+}}
+
+export class Model {{
+    { _propText }
+}}");
 
             string actual = IgnoreExtraWhiteSpace(result);
 
@@ -100,7 +114,7 @@ namespace DTGen.Tests
 
         private void SetUp()
         {
-            _sut = new Generator(new GenOptions()
+            SetUp(new GenOptions()
             {
                 IsCamelCaseEnabled = true,
                 Language = Language.TypeScript
@@ -109,7 +123,18 @@ namespace DTGen.Tests
 
         private void SetUp(GenOptions options)
         {
-            _sut = new Generator(options);
+            _propText = "public id: number[];";
+
+            var clsOrInt = options.IsMapToInterfaceEnabled ? "interface" : "class";
+
+            _containerText = $"export {clsOrInt} Model {{ public id: number[]; }}";
+
+            _mockLanguageService = new Mock<ILanguageService>();
+
+            _mockLanguageService.Setup(m => m.GetPropertyDeclaration(It.IsAny<string>(), It.IsAny<string>())).Returns(_propText);
+            _mockLanguageService.Setup(m => m.GetContainerDeclaration(It.IsAny<string>(), It.IsAny<string>())).Returns(_containerText);
+
+            _sut = new Generator(options, _mockLanguageService.Object);
         }
 
         private string IgnoreExtraWhiteSpace(string text)

@@ -22,6 +22,12 @@ namespace Core
             _languageService = LanguageServiceFactory.Create(options);
         }
 
+        public Generator(GenOptions options, ILanguageService service)
+        {
+            _options = options;
+            _languageService = service;
+        }
+
         public async Task<string> GenerateAsync(string source)
         {
             var opts = new CSharpParseOptions(LanguageVersion.Latest, DocumentationMode.None, SourceCodeKind.Regular);

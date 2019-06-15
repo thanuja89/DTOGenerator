@@ -5,7 +5,16 @@ namespace DTGen.Tests
 {
     public class TSLanguageServiceTests
     {
-        private TSLanguageService _sut;
+        private readonly TSLanguageService _sut;
+
+        public TSLanguageServiceTests()
+        {
+            _sut = new TSLanguageService(new GenOptions()
+            {
+                IsCamelCaseEnabled = true,
+                Language = Language.TypeScript
+            });
+        }
 
         [Theory]
         [InlineData("int", "number")]
@@ -13,7 +22,6 @@ namespace DTGen.Tests
         public void GetSimpleType_WhenCSTypeMatched_ReturnsCorrectTSType(string sourceType, string expectedType)
         {
             // Arrange
-            SetUp();
 
             // Act
             var type = _sut.GetSimpleType(sourceType);
@@ -34,7 +42,6 @@ namespace DTGen.Tests
         public void GetSimpleType_WhenCSTypeIsCollection_ReturnsCorrectTSType(string sourceType, string expectedType)
         {
             // Arrange
-            SetUp();
 
             // Act
             var type = _sut.GetSimpleType(sourceType);
@@ -49,7 +56,6 @@ namespace DTGen.Tests
         public void GetSimpleType_WhenCSTypeNotMatched_ReturnsSourceType(string sourceType, string expectedType)
         {
             // Arrange
-            SetUp();
 
             // Act
             var type = _sut.GetSimpleType(sourceType);
@@ -64,7 +70,6 @@ namespace DTGen.Tests
         public void GetPropertyType_WhenSimpleMatchingCSType_ReturnsCorrectTSType(string sourceType, string expectedType)
         {
             // Arrange
-            SetUp();
 
             // Act
             var type = _sut.GetPropertyType(sourceType);
@@ -79,7 +84,6 @@ namespace DTGen.Tests
         public void GetPropertyType_WhenGenericCSType_ReturnsCorrectGenericTSType(string sourceType, string expectedType)
         {
             // Arrange
-            SetUp();
 
             // Act
             var type = _sut.GetPropertyType(sourceType);
@@ -97,22 +101,12 @@ namespace DTGen.Tests
         public void GetPropertyType_WhenGenericCollectionCSType_ReturnsCorrectGenericArrayTSType(string sourceType, string expectedType)
         {
             // Arrange
-            SetUp();
 
             // Act
             var type = _sut.GetPropertyType(sourceType);
 
             // Assert
             Assert.Equal(expectedType, type);
-        }
-
-        private void SetUp()
-        {
-            _sut = new TSLanguageService(new GenOptions()
-            {
-                IsCamelCaseEnabled = true,
-                Language = Language.TypeScript
-            });
         }
     }
 }

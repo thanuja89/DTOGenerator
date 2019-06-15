@@ -8,7 +8,9 @@ namespace DTGen
     {
         static async Task Main(string[] args)
         {
-            var source = @"
+            try
+            {
+                var source = @"
     public class Model
     {
         public List<int> Id { get; set; }
@@ -25,14 +27,19 @@ namespace DTGen
         public string Field1, field2;
     }";
 
-            var gen = new Generator(new GenOptions()
+                var gen = new Generator(new GenOptions()
+                {
+                    IsCamelCaseEnabled = true,
+                    Language = Language.TypeScript
+                });
+
+                Console.WriteLine(await gen.GenerateAsync(source));
+
+            }
+            catch (Exception ex)
             {
-                IsCamelCaseEnabled = true,
-                Language = Language.TypeScript
-            });
-
-            Console.WriteLine(await gen.GenerateAsync(source));
-
+                throw;
+            }
             Console.ReadKey();
         }
     }
