@@ -46,12 +46,7 @@ $@"export class Model {{
         public async Task GenerateAsync_WhenCalledWithSingleClassAndIsMappedToInterfaceEnabled_ReturnsCorrectTSInterface()
         {
             // Arrange
-            SetUp(new GenOptions()
-            {
-                IsCamelCaseEnabled = true,
-                IsMapToInterfaceEnabled = true,
-                Language = Language.TypeScript
-            });
+            SetUpWithMapToInterfaceEnabled();
 
             var source =
 @"public class Model
@@ -114,27 +109,40 @@ export class Model {{
 
         private void SetUp()
         {
-            SetUp(new GenOptions()
-            {
-                IsCamelCaseEnabled = true,
-                Language = Language.TypeScript
-            });
-        }
-
-        private void SetUp(GenOptions options)
-        {
             _propText = "public id: number[];";
 
-            var clsOrInt = options.IsMapToInterfaceEnabled ? "interface" : "class";
-
-            _containerText = $"export {clsOrInt} Model {{ public id: number[]; }}";
+            _containerText = $"export class Model {{ public id: number[]; }}";
 
             _mockLanguageService = new Mock<ILanguageService>();
 
             _mockLanguageService.Setup(m => m.GetPropertyDeclaration(It.IsAny<string>(), It.IsAny<string>())).Returns(_propText);
             _mockLanguageService.Setup(m => m.GetContainerDeclaration(It.IsAny<string>(), It.IsAny<string>())).Returns(_containerText);
 
-            _sut = new Generator(options, _mockLanguageService.Object);
+            _sut = new Generator(new GenOptions()
+            {
+                IsCamelCaseEnabled = true,
+                IsMapToInterfaceEnabled = false,
+                Language = Language.TypeScript
+            }, _mockLanguageService.Object);
+        }
+
+        private void SetUpWithMapToInterfaceEnabled()
+        {
+            _propText = "public id: number[];";
+
+            _containerText = $"export interface Model {{ public id: number[]; }}";
+
+            _mockLanguageService = new Mock<ILanguageService>();
+
+            _mockLanguageService.Setup(m => m.GetPropertyDeclaration(It.IsAny<string>(), It.IsAny<string>())).Returns(_propText);
+            _mockLanguageService.Setup(m => m.GetContainerDeclaration(It.IsAny<string>(), It.IsAny<string>())).Returns(_containerText);
+
+            _sut = new Generator(new GenOptions()
+            {
+                IsCamelCaseEnabled = true,
+                IsMapToInterfaceEnabled = true,
+                Language = Language.TypeScript
+            }, _mockLanguageService.Object);
         }
 
         private string IgnoreExtraWhiteSpace(string text)
